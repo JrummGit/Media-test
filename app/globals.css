@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+/* ── Press Play palette: after-hours video store ─────────────────────── */
+:root {
+  --night: #120d1f;       /* store interior */
+  --night-2: #1c1530;     /* raised panels */
+  --night-3: #2a2045;     /* borders, wells */
+  --cream: #f6ecd9;       /* primary text */
+  --cream-dim: #b8aecb;   /* secondary text */
+  --neon-pink: #ff3d81;
+  --neon-teal: #29d3c2;
+  --mustard: #ffc93c;
+  --tape-red: #e63946;
+  --wood: #6b3f22;
+  --wood-hi: #8a5530;
+  --wire: #9aa3b5;
+}
+
+@theme inline {
+  --color-night: var(--night);
+  --color-night-2: var(--night-2);
+  --color-night-3: var(--night-3);
+  --color-cream: var(--cream);
+  --color-cream-dim: var(--cream-dim);
+  --color-pink: var(--neon-pink);
+  --color-teal: var(--neon-teal);
+  --color-mustard: var(--mustard);
+  --color-tape: var(--tape-red);
+  --color-wood: var(--wood);
+  --font-display: var(--font-bungee);
+  --font-crt: var(--font-vt323);
+  --font-sans: var(--font-grotesk);
+}
+
+html {
+  color-scheme: dark;
+  background: var(--night);
+}
+
+body {
+  background:
+    radial-gradient(1200px 600px at 50% -200px, #3a1f5a55, transparent 70%),
+    var(--night);
+  color: var(--cream);
+  font-family: var(--font-grotesk), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Subtle CRT scanlines over the whole store */
+body::after {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgb(255 255 255 / 0.018) 0 1px,
+    transparent 1px 3px
+  );
+}
+
+:focus-visible {
+  outline: 3px solid var(--mustard);
+  outline-offset: 3px;
+}
+
+/* ── Neon sign ─────────────────────────────────────────────────────────── */
+.neon {
+  color: #fff;
+  text-shadow:
+    0 0 4px #fff,
+    0 0 12px var(--neon-pink),
+    0 0 28px var(--neon-pink),
+    0 0 56px var(--neon-pink);
+}
+.neon-teal {
+  color: #eafffb;
+  text-shadow:
+    0 0 4px #fff,
+    0 0 12px var(--neon-teal),
+    0 0 28px var(--neon-teal);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .flicker {
+    animation: flicker 6s infinite steps(1);
+  }
+}
+@keyframes flicker {
+  0%, 18%, 22%, 62%, 64%, 100% { opacity: 1; }
+  20%, 63% { opacity: 0.55; }
+}
+
+/* ── Tape label sticker ────────────────────────────────────────────────── */
+.sticker {
+  background: var(--mustard);
+  color: #1a1423;
+  font-family: var(--font-bungee);
+  transform: rotate(-3deg);
+  box-shadow: 2px 3px 0 #0006;
+}
+
+/* ── Wooden shelf plank ────────────────────────────────────────────────── */
+.plank {
+  height: 18px;
+  background:
+    linear-gradient(to bottom, var(--wood-hi), var(--wood) 40%, #3e2413);
+  box-shadow: 0 8px 14px #0009;
+  border-radius: 2px;
+}
+
+/* ── 3D helpers ────────────────────────────────────────────────────────── */
+.preserve-3d { transform-style: preserve-3d; }
+.backface-hidden { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
