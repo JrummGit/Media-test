@@ -45,23 +45,23 @@ document.addEventListener("click", (e) => {
 
 function Page() {
   const path = usePathname();
+  const format = path.slice(1) as Format;
+  const isAisle = (FORMATS as readonly string[]).includes(format);
+  const item = path.startsWith("/item/") ? catalog.find((i) => i.slug === path.slice(6)) : undefined;
+
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [path]);
+    document.title = isAisle
+      ? `${FORMAT_LABEL[format]} · ${AISLE_COPY[format].sign} · Press Play Media`
+      : item
+        ? `${item.title} · Press Play Media`
+        : "Press Play Media";
+  }, [path, isAisle, format, item]);
 
-  const format = path.slice(1) as Format;
-  if ((FORMATS as readonly string[]).includes(format)) {
-    document.title = `${FORMAT_LABEL[format]} · ${AISLE_COPY[format].sign} · Press Play Media`;
+  if (isAisle) {
     return <AisleView key={format} format={format} items={catalog.filter((i) => i.format === format)} />;
   }
-  if (path.startsWith("/item/")) {
-    const item = catalog.find((i) => i.slug === path.slice(6));
-    if (item) {
-      document.title = `${item.title} · Press Play Media`;
-      return <ItemView key={item.slug} item={item} related={relatedItems(catalog, item)} />;
-    }
-  }
-  document.title = "Press Play Media";
+  if (item) return <ItemView key={item.slug} item={item} related={relatedItems(catalog, item)} />;
   return <ShopFloorView catalog={catalog} />;
 }
 
