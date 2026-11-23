@@ -70,7 +70,7 @@ function App() {
     <CartProvider>
       <div className="flex min-h-dvh flex-col">
         <div className="bg-mustard px-4 py-1.5 text-center text-sm font-semibold text-night">
-          Preview with sample inventory. Checkout isn&apos;t live yet.
+          Preview with sample inventory. Checkout runs on the deployed site.
         </div>
         <SiteHeader />
         <main className="flex-1">
