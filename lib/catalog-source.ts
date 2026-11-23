@@ -21,6 +21,7 @@ interface ItemRow {
   notes: string | null;
   price_cents: number;
   status: Item["status"];
+  reserved_until: string | null;
   featured: boolean;
   accent: string | null;
   created_at: string;
@@ -48,7 +49,8 @@ async function supabaseCatalog(): Promise<Item[]> {
     sealed: r.sealed,
     notes: r.notes ?? "",
     priceCents: r.price_cents,
-    status: r.status,
+    // A hold that ran out (e.g. a missed webhook) shouldn't hide the item.
+    status: r.status === "reserved" && r.reserved_until && new Date(r.reserved_until) < new Date() ? "active" : r.status,
     featured: r.featured,
     createdAt: r.created_at,
     accent: r.accent ?? "#ff3d81",

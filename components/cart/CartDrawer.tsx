@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { SHIPPING, shippingCents } from "@/lib/shipping";
 import { formatPrice, FORMAT_LABEL } from "@/lib/types";
 import { useCart } from "./CartProvider";
 
@@ -26,7 +27,9 @@ export function CartDrawer() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ slugs: lines.map((l) => l.slug) }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({ error: "Checkout isn't available right now. Please try again soon." }));
+      // Drop anything that sold while it sat in the cart, so a retry can succeed.
+      if (Array.isArray(data.unavailable)) data.unavailable.forEach((slug: string) => remove(slug));
       if (!res.ok || !data.url) throw new Error(data.error ?? "Checkout failed");
       window.location.href = data.url;
     } catch (e) {
@@ -93,11 +96,19 @@ export function CartDrawer() {
         </div>
 
         <footer className="border-t border-night-3 px-5 py-4">
-          <div className="mb-3 flex justify-between font-crt text-2xl">
-            <span>SUBTOTAL</span>
-            <span className="text-mustard">{formatPrice(subtotal)}</span>
+          <div className="mb-1 flex justify-between text-sm text-cream-dim">
+            <span>Subtotal</span>
+            <span>{formatPrice(subtotal)}</span>
           </div>
-          <p className="mb-3 text-xs text-cream-dim">Shipping and tax are calculated at checkout.</p>
+          <div className="mb-2 flex justify-between text-sm text-cream-dim">
+            <span>Flat-rate shipping</span>
+            <span>{lines.length ? formatPrice(shippingCents(lines.length)) : "—"}</span>
+          </div>
+          <div className="mb-1 flex justify-between font-crt text-2xl">
+            <span>TOTAL</span>
+            <span className="text-mustard">{formatPrice(subtotal + shippingCents(lines.length))}</span>
+          </div>
+          <p className="mb-3 text-xs text-cream-dim">{formatPrice(SHIPPING.firstItemCents)} for the first item, {formatPrice(SHIPPING.additionalItemCents)} for each extra. US shipping only for now.</p>
           <button
             disabled={lines.length === 0 || status === "loading"}
             onClick={checkout}
