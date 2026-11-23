@@ -23,6 +23,10 @@ npm run dev        # http://localhost:3000
 
 With no environment variables set, the shop uses the fictional sample inventory in `data/seed.ts`, with generated cover art in `public/seed/` (`npm run seed:art` regenerates it). Copy `.env.example` to `.env.local` to connect real services.
 
+## Shareable preview
+
+`npm run preview:build -- out.html` bundles the shop, with sample inventory and no checkout, into one self-contained HTML file. It uses the same view components (`components/views/*`) with small stand-ins for `next/link` and `next/navigation` (`preview/shims/`), and routes through `#hash` names.
+
 ## Connecting Supabase
 
 1. Create a free project at supabase.com.
