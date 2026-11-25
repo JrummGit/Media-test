@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { decadeOf, formatPrice, FORMAT_LABEL, imageFor, type Item } from "@/lib/types";
 import { useCart } from "@/components/cart/CartProvider";
+import { MediaPlayer } from "@/components/players/MediaPlayer";
 import { FlipCase } from "./FlipCase";
 import { ZoomViewer } from "./ZoomViewer";
 
@@ -13,8 +14,11 @@ export function Inspector({ item, compact = false }: { item: Item; compact?: boo
   const onHold = item.status === "reserved";
 
   return (
-    <div className={`grid gap-8 ${compact ? "md:grid-cols-[1.1fr_1fr]" : "md:grid-cols-[1.2fr_1fr]"} md:items-center`}>
-      <FlipCase item={item} maxHeight={compact ? 380 : 460} onZoom={(src, alt) => setZoom({ src, alt })} />
+    <div className={`grid gap-8 ${compact ? "md:grid-cols-[1.1fr_1fr]" : "md:grid-cols-[1.2fr_1fr]"} md:items-start`}>
+      <div className="flex flex-col gap-6">
+        <FlipCase item={item} maxHeight={compact ? 380 : 460} onZoom={(src, alt) => setZoom({ src, alt })} />
+        <MediaPlayer key={item.slug} item={item} />
+      </div>
 
       <div>
         <p className="font-crt text-xl uppercase tracking-widest text-teal">

@@ -30,6 +30,11 @@ export function seedCatalog(): Item[] {
       createdAt: new Date(Date.UTC(2026, 10, 20) - i * 36e5 * 7).toISOString(),
       images,
       accent: s.palette[1],
+      ground: s.palette[0],
+      preview:
+        s.format === "vhs"
+          ? { kind: "video", provider: "generated", title: "Trailer" }
+          : { kind: "audio", provider: "generated", title: s.tracks?.[0] ?? s.title },
     };
   });
 }

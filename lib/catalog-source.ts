@@ -1,7 +1,7 @@
 import "server-only";
 import { createClient } from "@supabase/supabase-js";
 import { seedCatalog } from "@/lib/seed-catalog";
-import type { Format, Item, ItemImage } from "@/lib/types";
+import type { Format, Item, ItemImage, MediaPreview } from "@/lib/types";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -24,6 +24,7 @@ interface ItemRow {
   reserved_until: string | null;
   featured: boolean;
   accent: string | null;
+  preview: (MediaPreview & { enabled?: boolean }) | null;
   created_at: string;
   item_images: { role: ItemImage["role"]; storage_path: string; width: number; height: number; sort: number }[];
 }
@@ -54,6 +55,7 @@ async function supabaseCatalog(): Promise<Item[]> {
     featured: r.featured,
     createdAt: r.created_at,
     accent: r.accent ?? "#ff3d81",
+    preview: r.preview && r.preview.enabled !== false ? r.preview : undefined,
     images: [...r.item_images]
       .sort((a, b) => a.sort - b.sort)
       .map((img) => ({

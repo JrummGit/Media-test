@@ -42,6 +42,17 @@ How it works:
 - Holds need Supabase. With the sample catalog, checkout still works but nothing is reserved.
 - The order is recorded and a confirmation email goes out, through Resend if `RESEND_API_KEY` is set, otherwise the email is skipped and logged.
 
+## Previews (sound and screen)
+
+Pulling a case shows a player under it. Nothing plays until the shopper taps Play, and only one clip plays at a time.
+- **Cassettes:** a tape deck whose reels wind as the clip plays.
+- **CDs:** a disc that slides out and spins, with an LCD panel.
+- **VHS:** a CRT television.
+
+Sample items use original tunes and footage generated in the browser (`components/players/generated/`). Real listings will use official sources, matched in the admin and approved by you (Phase 4):
+- **Music:** Apple's 30-second preview clips, with the attribution and link Apple requires.
+- **Film:** official trailers from TMDB, played in YouTube's privacy-enhanced embed. Nothing is drawn over YouTube's player, which its rules require.
+
 ## Connecting Supabase
 
 1. Create a free project at supabase.com.

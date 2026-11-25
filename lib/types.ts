@@ -26,6 +26,26 @@ export interface ItemImage {
   height: number;
 }
 
+/**
+ * A playable preview attached to a listing: a 30-second audio clip for music,
+ * a trailer for film. "generated" means a placeholder synthesised in the
+ * browser (sample inventory only).
+ */
+export interface MediaPreview {
+  kind: "audio" | "video";
+  provider: "apple" | "deezer" | "youtube" | "generated";
+  /** Provider id: track id, YouTube video id, etc. */
+  ref?: string;
+  /** Direct audio URL (Apple / Deezer preview clips). */
+  url?: string;
+  /** Track or clip name shown on the player. */
+  title?: string;
+  /** Credit line required by the provider. */
+  attribution?: string;
+  /** Link back to the provider (required by Apple's terms). */
+  link?: string;
+}
+
 export type ItemStatus = "draft" | "active" | "reserved" | "sold";
 
 export interface Item {
@@ -48,6 +68,9 @@ export interface Item {
   images: ItemImage[];
   /** Accent color used for generated spines and UI highlights. */
   accent: string;
+  /** Background color of the cover art, used by generated previews. */
+  ground?: string;
+  preview?: MediaPreview;
 }
 
 export function decadeOf(year: number): string {
