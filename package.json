@@ -10,7 +10,8 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "seed:art": "node scripts/generate-seed-art.ts",
-    "preview:build": "node scripts/build-preview.mjs"
+    "preview:build": "node scripts/build-preview.mjs",
+    "seed:sql": "node scripts/seed-supabase-sql.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.2",

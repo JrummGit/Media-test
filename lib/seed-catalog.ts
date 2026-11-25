@@ -1,5 +1,5 @@
-import { SEED_ITEMS } from "@/data/seed";
-import { CASE_DIMENSIONS, type Item, type ItemImage } from "@/lib/types";
+import { SEED_ITEMS } from "../data/seed.ts";
+import { CASE_DIMENSIONS, type Item, type ItemImage } from "./types.ts";
 
 const ART_SCALE = 4;
 

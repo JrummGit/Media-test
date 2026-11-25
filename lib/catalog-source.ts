@@ -24,6 +24,7 @@ interface ItemRow {
   reserved_until: string | null;
   featured: boolean;
   accent: string | null;
+  ground: string | null;
   preview: (MediaPreview & { enabled?: boolean }) | null;
   created_at: string;
   item_images: { role: ItemImage["role"]; storage_path: string; width: number; height: number; sort: number }[];
@@ -55,6 +56,7 @@ async function supabaseCatalog(): Promise<Item[]> {
     featured: r.featured,
     createdAt: r.created_at,
     accent: r.accent ?? "#ff3d81",
+    ground: r.ground ?? undefined,
     preview: r.preview && r.preview.enabled !== false ? r.preview : undefined,
     images: [...r.item_images]
       .sort((a, b) => a.sort - b.sort)
@@ -62,7 +64,11 @@ async function supabaseCatalog(): Promise<Item[]> {
         role: img.role,
         width: img.width,
         height: img.height,
-        src: supabase.storage.from("item-images").getPublicUrl(img.storage_path).data.publicUrl,
+        // Sample items point at art bundled with the site ("/seed/…"); real
+        // listings point at photos in the Supabase storage bucket.
+        src: /^(\/|https?:)/.test(img.storage_path)
+          ? img.storage_path
+          : supabase.storage.from("item-images").getPublicUrl(img.storage_path).data.publicUrl,
       })),
   }));
 }
