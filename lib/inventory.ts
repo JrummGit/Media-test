@@ -1,22 +1,13 @@
 import "server-only";
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { serviceConfigured, serviceDb } from "@/lib/supabase/service";
 
 /**
  * Holds, sales and orders. Uses the Supabase service role (server only).
  * Without Supabase configured (sample catalog), every call is a no-op so
  * checkout can still be tried end to end.
  */
-let admin: SupabaseClient | null = null;
-
-export const inventoryConfigured = () =>
-  Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
-
-function db(): SupabaseClient {
-  admin ??= createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
-    auth: { persistSession: false },
-  });
-  return admin;
-}
+export const inventoryConfigured = serviceConfigured;
+const db = serviceDb;
 
 export class ItemsUnavailableError extends Error {
   constructor() {

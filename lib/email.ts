@@ -56,3 +56,10 @@ export async function sendOrderEmails(order: OrderEmail) {
   }
   await Promise.all(jobs);
 }
+
+export async function sendShippedEmail(email: string, trackingNumber: string | null) {
+  const track = trackingNumber
+    ? `<p>Tracking number: <b>${esc(trackingNumber)}</b><br><a href="https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(trackingNumber)}">Track it with USPS</a></p>`
+    : "";
+  await send(email, "Your Press Play Media order has shipped", `<p>Good news: your order is on its way.</p>${track}<p>Be kind, rewind.</p>`);
+}

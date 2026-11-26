@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Suspense } from "react";
 import { FORMATS, FORMAT_LABEL } from "@/lib/types";
 import { useCart } from "./cart/CartProvider";
 
 export function SiteHeader() {
   const { lines, setOpen } = useCart();
-  const path = usePathname();
 
   return (
     <header className="sticky top-0 z-40 border-b border-night-3/80 bg-night/85 backdrop-blur-md">
@@ -27,20 +27,11 @@ export function SiteHeader() {
         </Link>
 
         <nav className="ml-auto flex items-center gap-1 sm:gap-2" aria-label="Aisles">
-          {FORMATS.map((f) => {
-            const active = path === `/${f}`;
-            return (
-              <Link
-                key={f}
-                href={`/${f}`}
-                className={`rounded px-2 py-1 font-crt text-xl uppercase tracking-wide transition sm:px-3 ${
-                  active ? "bg-night-3 text-mustard" : "text-cream-dim hover:text-cream"
-                }`}
-              >
-                {FORMAT_LABEL[f]}
-              </Link>
-            );
-          })}
+          {/* The address is only known per request on some routes, so the
+              highlight streams in while plain links render immediately. */}
+          <Suspense fallback={<AisleLinks active={null} />}>
+            <ActiveAisleLinks />
+          </Suspense>
           <button
             onClick={() => setOpen(true)}
             className="relative ml-1 rounded-md border border-night-3 px-2.5 py-1.5 hover:border-pink"
@@ -61,5 +52,30 @@ export function SiteHeader() {
         </nav>
       </div>
     </header>
+  );
+}
+
+function ActiveAisleLinks() {
+  return <AisleLinks active={usePathname()} />;
+}
+
+function AisleLinks({ active }: { active: string | null }) {
+  return (
+    <>
+      {FORMATS.map((f) => {
+        const on = active === `/${f}`;
+        return (
+          <Link
+            key={f}
+            href={`/${f}`}
+            className={`rounded px-2 py-1 font-crt text-xl uppercase tracking-wide transition sm:px-3 ${
+              on ? "bg-night-3 text-mustard" : "text-cream-dim hover:text-cream"
+            }`}
+          >
+            {FORMAT_LABEL[f]}
+          </Link>
+        );
+      })}
+    </>
   );
 }
